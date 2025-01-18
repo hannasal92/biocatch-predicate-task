@@ -17,9 +17,11 @@ To get started with the project, follow these steps:
 1. Clone the repository:
    git clone https://github.com/hannasal92/biocatch-predicate-task.git
    cd biocatch-predicate-task
+   
+2. install the dependencies
    npm install
 
-2. Testing with Jest
+3. Testing with Jest
 
    This project uses Jest as the testing framework to ensure the correctness of the implemented features. Jest is a powerful testing framework widely used for JavaScript and TypeScript applications.
 
