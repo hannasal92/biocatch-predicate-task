@@ -7,9 +7,9 @@ describe('Predicate', () => {
     const result = predicate.evaluate(root).result;
     expect(result).toBe(true);
   });
-  it('should test "eqTo" correctly with calling the parseJsonToPredicate function', () => {
+  it('should test "eqTo" correctly with calling the buildFromJson function', () => {
     const jsonString = "{\"feature\": \".x.y\", \"operation\": {\"operator\": \"eqTo\", \"operand\": 5}}";
-    const predicate = Predicate.parseJsonToPredicate(jsonString);
+    const predicate = Predicate.buildFromJson(jsonString);
     const root = { x: { y: 5 } };
     const result = predicate.evaluate(root).result;
     expect(result).toBe(true);

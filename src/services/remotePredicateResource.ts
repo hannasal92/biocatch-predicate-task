@@ -10,12 +10,19 @@ export class RemotePredicateResource {
   static async from_env(): Promise<RemotePredicateResource> {
     // if there is no url in env throw an error
     const url = process.env.PREDICATE_SERVICE_URL;
-    if (!url) throw new Error("PREDICATE_SERVICE_URL is not defined in the environment");
+    if (!url){
+      throw new Error("PREDICATE_SERVICE_URL is not defined in the environment");
+    } 
 
     const resource = new RemotePredicateResource();
     // send get request and parse the json and init predicate with feature and operation
-    await resource.updatePredicate(url);
-    resource.startFetchingEveryTwoMins(url);
+    try {
+      await resource.updatePredicate(url);
+      resource.startFetchingEveryTwoMins(url);
+    } catch (error) {
+      console.error("something went wrong", error);
+      throw new Error("something went wrong.");
+    }
     return resource;
   }
 
@@ -31,8 +38,10 @@ export class RemotePredicateResource {
 
       if (response.status === 200) {
         this.etag = response.headers.etag || null;
-        this.predicateInstance = Predicate.parseJsonToPredicate(response.data);
-        
+        this.predicateInstance = Predicate.buildFromJson(response.data);
+        console.info("Predicate successfully updated.");
+      } else if (response.status === 304) {
+        console.info("Predicate is already up to date.");
       }else {
         console.error(`Failed to fetch predicate status code: ${response.status}`);
       }
@@ -43,6 +52,10 @@ export class RemotePredicateResource {
 
   private startFetchingEveryTwoMins(url: string): void {
     //setInterval to run the code every two mins to fetch the data again
-    setInterval(() => this.updatePredicate(url), 120000); // 2 minutes
+    setInterval(() => {
+      this.updatePredicate(url).catch((error) =>
+        console.error("Error during update:", error)
+      );
+    }, 120000); // 2 minutes
   }
 }

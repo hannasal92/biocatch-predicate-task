@@ -10,8 +10,8 @@ export class Predicate {
     this.operation = operation;
   }
 
-  //a function that can parse a json string into a predicate
-  static parseJsonToPredicate(jsonString: string): Predicate {
+  //a function that can parse a json string and init a predicate
+  static buildFromJson(jsonString: string): Predicate {
     try {
       const parsed = JSON.parse(jsonString) as PredicateObj;
   
@@ -80,7 +80,7 @@ export class Predicate {
     const { operator, operand, operations } = operation;
   
     // so i added the result boolean to return if the evalute pass or failed , and i added a message to explain why
-    const createResponse = (result: boolean, message: string): responseObj => {
+    const buildResult = (result: boolean, message: string): responseObj => {
       // log the message if the result is false
       if(!result){
         console.warn(message);
@@ -91,33 +91,33 @@ export class Predicate {
     switch (operator) {
       case "isNone":
         return value === null || value === undefined
-          ? createResponse(true, operatorMessages.IS_NONE_SUCCESS)
-          : createResponse(false, operatorMessages.IS_NONE_FAIL);
+          ? buildResult(true, operatorMessages.IS_NONE_SUCCESS)
+          : buildResult(false, operatorMessages.IS_NONE_FAIL);
   
       case "isNotNone":
         return value !== null && value !== undefined
-          ? createResponse(true, operatorMessages.IS_NOT_NONE_SUCCESS)
-          : createResponse(false, operatorMessages.IS_NOT_NONE_FAIL);
+          ? buildResult(true, operatorMessages.IS_NOT_NONE_SUCCESS)
+          : buildResult(false, operatorMessages.IS_NOT_NONE_FAIL);
   
       case "eqTo":
         return value === operand
-          ? createResponse(true, operatorMessages.EQUAL_SUCCESS)
-          : createResponse(false, operatorMessages.EQUAL_FAIL);
+          ? buildResult(true, operatorMessages.EQUAL_SUCCESS)
+          : buildResult(false, operatorMessages.EQUAL_FAIL);
   
       case "notEqualTo":
         return value !== operand
-          ? createResponse(true, operatorMessages.NOT_EQUAL_SUCCESS)
-          : createResponse(false, operatorMessages.NOT_EQUAL_FAIL);
+          ? buildResult(true, operatorMessages.NOT_EQUAL_SUCCESS)
+          : buildResult(false, operatorMessages.NOT_EQUAL_FAIL);
   
       case "isLessThan":
         return value < operand
-          ? createResponse(true, operatorMessages.IS_LESS_THAN_SUCCESS)
-          : createResponse(false, operatorMessages.IS_LESS_THAN_FAIL);
+          ? buildResult(true, operatorMessages.IS_LESS_THAN_SUCCESS)
+          : buildResult(false, operatorMessages.IS_LESS_THAN_FAIL);
   
       case "isGreaterThan":
         return value > operand
-          ? createResponse(true, operatorMessages.IS_GREATER_THAN_SUCCESS)
-          : createResponse(false, operatorMessages.IS_GREATER_THAN_FAIL);
+          ? buildResult(true, operatorMessages.IS_GREATER_THAN_SUCCESS)
+          : buildResult(false, operatorMessages.IS_GREATER_THAN_FAIL);
   
       case "and":
         //The .every() method is a JavaScript array method that checks if every element in the array satisfies the provided condition 
@@ -125,8 +125,8 @@ export class Predicate {
         const andResult =
           operations?.every((op) => this.evaluateOperation(value, op).result) ?? false;
         return andResult
-          ? createResponse(true, operatorMessages.AND_SUCCESS)
-          : createResponse(false, operatorMessages.AND_FAIL);
+          ? buildResult(true, operatorMessages.AND_SUCCESS)
+          : buildResult(false, operatorMessages.AND_FAIL);
   
       case "or":
         //.some() method is a JavaScript array method that checks if any element in the array satisfies the provided condition
@@ -134,8 +134,8 @@ export class Predicate {
         const orResult =
           operations?.some((op) => this.evaluateOperation(value, op).result) ?? false;
         return orResult
-          ? createResponse(true, operatorMessages.OR_SUCCESS)
-          : createResponse(false, operatorMessages.OR_FAIL);
+          ? buildResult(true, operatorMessages.OR_SUCCESS)
+          : buildResult(false, operatorMessages.OR_FAIL);
   
       default:
         throw new Error(`operator not supported: ${operator}`);
