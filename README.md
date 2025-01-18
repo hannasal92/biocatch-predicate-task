@@ -15,7 +15,8 @@ The project also includes a feature to periodically fetch and update the predica
 To get started with the project, follow these steps:
 
 1. Clone the repository:
-
+   git clone https://github.com/hannasal92/biocatch-predicate-task.git
+   cd biocatch-predicate-task
    npm install
 
 2. Testing with Jest
