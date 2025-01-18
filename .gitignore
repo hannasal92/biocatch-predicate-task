@@ -1,0 +1,22 @@
+# Node modules
+/node_modules/
+
+# Build output
+/dist/
+/build/
+
+# TypeScript compiled files
+*.tsbuildinfo
+
+# Jest coverage output
+/coverage/
+
+# Operating system files
+.DS_Store
+
+# IDE and editor configurations
+.vscode/
+.idea/
+
+# npm package lock file (optional but useful in some cases)
+package-lock.json
