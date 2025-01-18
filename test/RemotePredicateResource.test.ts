@@ -1,16 +1,5 @@
 import { RemotePredicateResource } from '../src/services/remotePredicateResource';
 
-// Mock fetch for unit tests
-global.fetch = jest.fn().mockResolvedValue({
-  json: jest.fn().mockResolvedValue({
-    feature: '.x.y',
-    operation: {
-      operator: 'eqTo',
-      operand: 5,
-    },
-  }),
-});
-
 describe('RemotePredicateResource', () => {
   it('test the predicate from the response with the expected predicate', async () => {
     // Set the environment variable for testing
